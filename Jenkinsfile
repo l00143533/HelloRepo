@@ -1,6 +1,6 @@
  node{
 	stage('SCM Checkout'){
-		git 'github.com/l00143533/HelloRepo.git'
+		git 'github.com/l00143533/HelloRepo'
 	}
   	stage('Compile-Package'){
   	    def mvnHome = tool name: 'maven-3.6.3', type: 'maven'

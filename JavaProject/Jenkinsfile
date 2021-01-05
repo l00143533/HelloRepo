@@ -1,9 +1,28 @@
-node{
-	stage('SCM Checkout'){
-		git 'https://github.com/l00143533/HelloRepo'
+pipeline {
+	agent any
+
+	tools {
+		maven 'maven-3.6.3'
 	}
-  	stage('Compile-Package'){
-  	    def mvnHome = tool name: 'maven-3.6.3', type: 'maven'
-		sh "${mvnHome}/bin/mvn package"
-	}
+
+	stages {
+		stage('GIT Checkout'){
+			steps{
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+			doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg:
+			[], userRemoteConfigs: [[url: 'https://github.com/l00143533/HelloRepo.git']]])
+			}
+		}	
+			stage ('Build') {
+				steps {
+					sh 'mvn -f JavaProject/pom.xml clean install'
+				}
+			}
+			
+			stage ('Run Tests') {
+				steps {	
+					sh 'mvn -f  JavaProject/pom.xml test'
+				}
+			}
+		}
 }

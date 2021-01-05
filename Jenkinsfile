@@ -1,0 +1,29 @@
+  
+pipeline {
+	agent any
+
+	tools {
+		maven 'maven-3.6.3'
+	}
+
+	stages {
+		stage('GIT Checkout'){
+			steps{
+				checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+			doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg:
+			[], userRemoteConfigs: [[url: 'https://github.com/l00143533/HelloRepo.git']]])
+			}
+		}	
+			stage ('Build') {
+				steps {
+					sh 'mvn -f JavaProject/pom.xml clean install'
+				}
+			}
+			
+			stage ('Run Tests') {
+				steps {	
+					sh 'mvn -f  JavaProject/pom.xml test'
+				}
+			}
+		}
+}
